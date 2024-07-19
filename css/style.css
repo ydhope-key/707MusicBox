@@ -452,7 +452,7 @@ body {
 }
 
 .all-list div:hover {
-    background-color: rgb(27, 37, 30);
+	background-color: cadetblue;
     cursor: default;
 }
 
