@@ -309,7 +309,6 @@ function createMusicListDiv(i) {
 	createMusicList = document.createElement("div");			//创建电影栏目div用于保存一个电影信息
 	createMusicList.setAttribute("id","music"+i);					//setAttribute() ：方法添加指定的属性，并为其赋指定的值。
 	createMusicList.innerHTML = musicName[i];
-	createMusicList.style.overflow = "hidden";
 	createMusicList.title = musicName[i];
 	document.getElementById("all-list").appendChild(createMusicList);
 	document.getElementById("music"+i).addEventListener('click', function (event) {
