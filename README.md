@@ -8,10 +8,8 @@
     1、cors 服务器携带特殊的响应头
     2、使用jsonp datatpye，然后在回调函数中读取（只能用于get）
 
-preview<br>点击进入
+preview  [点击进入](https://heiyu707.cn/)
 
-![image](https://github.com/ydhope-key/707MusicBox/assets/61082568/05819c53-c429-45ad-bb41-1e349a19bd8b)
+![image](https://github.com/user-attachments/assets/c81b13ab-0bba-4f14-81c9-8e47a4298979)
 
-![image](https://github.com/ydhope-key/707MusicBox/assets/61082568/685e412a-ed47-461a-96e0-fc4f205dd52b)
-
-![image](https://github.com/ydhope-key/707MusicBox/assets/61082568/a7fedce5-0b1d-43bb-9565-c4c4e1f09bb6)
+![image](https://github.com/user-attachments/assets/34b26177-92e9-40eb-9349-e1ba53bc5338)
