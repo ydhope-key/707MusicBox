@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>707MusicBox</title>
+	<link rel="shortcut icon" href="./img/favicon.ico"/>
+    <link href="./css/style.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/jscex.min.js"></script>
+	<script type="text/javascript" src="./js/jscex-parser.js"></script>
+	<script type="text/javascript" src="./js/jscex-jit.js"></script>
+	<script type="text/javascript" src="./js/jscex-builderbase.min.js"></script>
+	<script type="text/javascript" src="./js/jscex-async.min.js"></script>
+	<script type="text/javascript" src="./js/jscex-async-powerpack.min.js"></script>
+	<script type="text/javascript" src="./js/functions.js" charset="utf-8"></script>
+	<script type="text/javascript" src="./js/love.js" charset="utf-8"></script>
+	<script type="text/javascript" src="./js/jq.snow.js"></script>	
+</head>
+<body  id="body">
+	<div class="main">
+		<div id="titleBar">
+			<p class="name">707MusicBox</p>
+			<ul>
+				<a href="video.html" title="707VideoBox"><li style="cursor: default">Video</li></a>
+				<a href="https://heiyu707.cn/login" title="登录文件管理系统"><li style="cursor: default">登录</li></a>
+			</ul>
+		</div>
+		<div class="upper-container" id="upper-container">
+			<!-- 音乐介绍 -->
+			<div class="introduction-container">
+				<div id="music-title">音乐</div>
+				<div class="author-container">作者：
+					<span id="author-name">未知</span>
+				</div>			
+			</div>
+			<!-- 唱片背景 -->
+			<div class="record-container">
+				<div class="record-bg">
+					<div id="record-img" class="rotate-play"></div>
+				</div>
+			</div>
+		</div>
+		   <!-- 音乐播放器主要内容 -->
+		<div class="audio-box">
+			<div class="audio-container">
+				<audio id="audioTag"></audio>
+				<!-- 上排控制按钮 -->
+				<div class="up-a-controls">
+					<!-- 播放时长 -->
+					<div class="time-container">
+						<span class="played-time" id="playedTime">00:00</span>&nbsp;/&nbsp;
+						<span class="audio-time" id="audioTime">00:00</span>
+					</div>
+					<!-- 后部按钮 -->
+					<div class="up-right-button-container">
+						<!-- 倍速 -->
+						<div id="speed" class="up-right-icon speed">1.0X</div>
+						<!-- 列表 -->
+						<div id="list" class="up-right-icon list"></div>
+					</div>
+				</div>
+				<!-- 进度条 -->
+				<div class="a-progress">
+					<div class="pgs-total" id="progress-total">
+						<div class="pgs-play" id="progress" style="width: 0%;"></div>
+					</div>
+				</div>
+				<!-- 下排控制按钮 -->
+				<div class="a-controls">
+					<!-- 左边按钮 -->
+					<div class="left-button-container">	
+						<!-- 播放模式 -->
+						<div id="playMode" class="center-icon mode"></div>
+					</div>
+					
+					<!-- 中间按钮 -->
+					<div class="center-button-container">	
+						<!-- 上一首 -->
+						<div id="skipForward" class="center-icon s-right"></div>
+						<!-- 暂停按钮 -->
+						<div id="playPause" class="icon-play"></div>
+						<!-- 下一首 -->
+						<div id="skipBackward" class="center-icon s-left"></div>						
+					</div>
+					
+					<!-- 右边按钮 -->
+					<div class="right-button-container">	
+						<!-- 音量调节 -->
+						<div id="volume" class="center-icon volume"></div>
+						<!-- 音量悬浮窗 -->
+						<input type="range" id="volumn-togger" name="change" value="70" min="0" max="100" step="1">
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<!-- 音乐列表 -->
+		<div class="close-list" id="close-list"></div>
+		<div class="music-list" id="music-list">
+			<div class="music-list-container">
+				<div class="music-list-title">播放列表</div>
+				<hr class="line">
+				<div class="all-list" id="all-list">
+				</div>
+			</div>
+		</div>
+		<!-- Love Tree -->
+		<div id="wrap">
+			<img src="./img/707_bg.jpg" style="display: none;">
+			<canvas id="canvas" ></canvas>
+		</div>
+		<!-- ICP -->
+		<div class="footer">
+			<img src="./img/备案图标.png" class="w-full" style="width: 16px;height: 17.28px;">
+			<a href="https://beian.mps.gov.cn/#/query/webSearch?code=1xxxxxxxxxxxxx" style="color:#595959;font-size:14px;">粤公网安备1xxxxxxxxxxxxx</a>
+			<a href="https://beian.miit.gov.cn/#/Integrated/index" style="color:#595959;font-size:14px;margin-left: 20px;" >粤ICP备xxxxxxxxx1号</a>
+		</div>
+	</div>
+	<script src="./js/audio.js"></script>
+	<script>
+    (function(){
+        var canvas = $('#canvas');
+
+        var width = canvas.width();
+        var height = canvas.height();        
+        canvas.attr("width", width);
+        canvas.attr("height", height);
+        var opts = {
+            seed: {
+                x: width / 2 - 20,
+                color: "rgb(190, 26, 37)",
+                scale: 2
+            },
+            bloom: {
+                num: 707,
+                width: width,
+                height: height,
+            }
+        }
+
+        var tree = new Tree(canvas[0], width, height, opts);
+        var seed = tree.seed;
+        var hold = 1;
+
+        canvas.click(function(e) {
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            if (seed.hover(x, y)) {
+                hold = 0; 
+                canvas.unbind("click");
+                canvas.unbind("mousemove");
+                canvas.removeClass('hand');
+            }
+        }).mousemove(function(e){
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            canvas.toggleClass('hand', seed.hover(x, y));
+        });
+
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (hold) {
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canScale()) {
+                seed.scale(0.95);
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canMove()) {
+                seed.move(0, 2);
+                $await(Jscex.Async.sleep(10));
+            }
+        }));
+
+
+
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do {
+    	        tree.flower(2);
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canFlower());
+        }));
+
+
+        var moveAnimate = eval(Jscex.compile("async", function () {
+			
+			$('#wrap').css("display", "none");	
+			document.getElementById('body').style.backgroundImage = "url('./img/707_bg.jpg')";
+			$await(Jscex.Async.sleep(30));
+			
+
+			$(function(){
+				$.fn.snow({ 
+					minSize: 5,		//雪花的最小尺寸
+					maxSize: 40, 	//雪花的最大尺寸
+					newOn: 300		//雪花出现的频率 这个数值越小雪花越多
+				});
+			});		
+			
+			$('#titleBar').css("display", "inherit");	
+			$('.upper-container').css("display", "inherit");		
+			$('.audio-box').css("display", "flex");
+			$('#playPause').click();
+			
+			
+        }));
+		
+        var runAsync = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+
+        }));
+
+        runAsync().start();
+    })();
+    </script> 
+
+</body>
+</html>
