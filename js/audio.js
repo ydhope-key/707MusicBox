@@ -131,42 +131,39 @@ let musicName = [['阿拉斯加海湾（治愈女声）'], ['用情（走心治�
 				['你不知道的事（温御走心版）'],['陪你度过漫长岁月（治愈版）'], ['平凡天使（翻自 邓紫棋）'], ['巧克力'], ['倾城（走心治愈版）']];  // 5
 
 // 存储当前播放的音乐序号
-var musicId = Math.floor(Math.random() * (musicName.length - 1)) + 0;
+var musicId = 0;
 
 //读取fileService中音频信息
 let fileList = '';
 var createMusicList;
 $.ajax({
 			type: 'get',
-			url: "https://heiyu707.cn/fileServer/findAudioJSON",
+			url: "https://heiyu707.cn/fileServer/findJSONByFileService?type=audio",
 			dataType: "json",
 			success: function(res) {
 				fileList = res;
-				if (fileList.length > 0) {
-            		musicId = Math.floor(Math.random() * (fileList.length - 1)) + 0;
-            		musicName = new Array(fileList.length);
-					musicName[musicId] = fileList[musicId].oldFileName.replace(fileList[musicId].ext,'').split('-')[1];          		
-            	}
 			},
             complete: function (data) { // 请求完成时调用，无论请求失败或成功。
-                initMusic();
 				if (fileList.length > 0) {
+            		musicName = new Array(fileList.length);  
             		for (let i = 0; i < fileList.length; i++) {
             			musicName[i] = fileList[i].oldFileName.replace(fileList[i].ext,'').split('-')[1];
 						createMusicListDiv(i);
-            		}
-            		
+            		}     		
             	} else {
 					for (let i = 0; i < musicName.length; i++) {
 						createMusicListDiv(i);
 					}
 				}
-
+                initMusic();
             }
 		})
 
 // 初始化音乐
 function initMusic() {
+	
+        musicTitle.innerText = musicName[musicId];
+        author.innerText = "晴柠柒";
 	if (fileList.length > 0) {
 		audio.src = "music/"+fileList[musicId].newFileName;
 	} else {
@@ -175,8 +172,6 @@ function initMusic() {
     audio.load();
     recordImg.classList.remove('rotate-play');
     audio.ondurationchange = function () {
-        musicTitle.innerText = musicName[musicId];
-        author.innerText = "晴柠柒";
         audioTime.innerText = transTime(audio.duration);
         // 重置进度条
         audio.currentTime = 0;
@@ -199,7 +194,7 @@ function initAndPlay() {
 
 
 // 播放模式设置
-var modeId = 3;
+var modeId = 2;
 mode.addEventListener('click', function (event) {
     modeId = modeId + 1;
     if (modeId > 3) {
